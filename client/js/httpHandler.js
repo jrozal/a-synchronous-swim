@@ -5,19 +5,22 @@
   //
   // TODO: build the swim command fetcher here
   //
-
+  let counter = 0;
   const ajaxRandomSwimMove = () => {
     $.ajax({
       type: 'GET',
-      data: 'direction'
+      data: 'direction',
       url: serverUrl,
       cache: false,
       contentType: false,
       processData: false,
       success: (data) => {
         console.log('GET random response successful');
-        console.log(data);
-
+        SwimTeam.move(data)
+        setTimeout(ajaxRandomSwimMove, 15000);
+      },
+      error: () => {
+        console.log('the GET request has failed');
       }
     });
   }
