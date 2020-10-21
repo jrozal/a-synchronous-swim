@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const headers = require('./cors');
 const multipart = require('./multipartUtils');
+const keypress = require('keypress');
 
 // Path for the background image ///////////////////////
 module.exports.backgroundImageFile = path.join('.', 'background.jpg');
@@ -12,15 +13,14 @@ module.exports.initialize = (queue) => {
   messageQueue = queue;
 };
 
+// process.stdin.setRawMode(true);
+// process.stdin.on('keypress', (str, key)) => {
+//   console.log(`You have pressed the ${str} key`);
+//   console.log(key);
+// }
+
 module.exports.router = (req, res, next = ()=>{}) => {
   console.log('Serving request type ' + req.method + ' for url ' + req.url);
-  //if req.url is random
-  // console.log(req.url);
-  // if(req.url === '/random') {
-  //   //send a random res
-  //   res.writeHead(200, headers);
-  //   res.end('yo world')
-  // }
   let direction = ['up', 'down', 'left', 'right'];
   if (req.method === 'GET') {
     res.writeHead(200, headers);

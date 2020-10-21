@@ -17,7 +17,7 @@
       success: (data) => {
         console.log('GET random response successful');
         SwimTeam.move(data)
-        setTimeout(ajaxRandomSwimMove, 15000);
+        // setTimeout(ajaxRandomSwimMove, 15000);
       },
       error: () => {
         console.log('the GET request has failed');
