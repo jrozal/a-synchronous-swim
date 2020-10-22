@@ -16,6 +16,7 @@ describe('server responses', () => {
     httpHandler.router(req, res);
     expect(res._responseCode).to.equal(200);
     expect(res._ended).to.equal(true);
+    console.log(res._data);
     expect(res._data.toString()).to.be.empty;
 
     done();
@@ -25,10 +26,11 @@ describe('server responses', () => {
     // write your test here
     let {req, res} = server.mock('/', 'GET');
 
+    let directions = ['up', 'down', 'left', 'right', 'empty'];
     httpHandler.router(req, res);
     expect(res._responseCode).to.equal(200);
     expect(res._ended).to.equal(true);
-    expect(res._data.toString()).to.be.empty;
+    expect(res._data.toString()).to.be.oneOf(directions);
 
     done();
   });

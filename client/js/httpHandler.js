@@ -16,8 +16,13 @@
       processData: false,
       success: (data) => {
         console.log('GET random response successful');
-        SwimTeam.move(data)
-        // setTimeout(ajaxRandomSwimMove, 15000);
+        let requests = setTimeout(ajaxRandomSwimMove, 2000);
+        if(data === 'empty') {
+          clearTimeout(requests);
+        } else {
+          SwimTeam.move(data)
+        }
+
       },
       error: () => {
         console.log('the GET request has failed');
