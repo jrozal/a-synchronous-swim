@@ -9,12 +9,9 @@
   const ajaxRandomSwimMove = () => {
     $.ajax({
       type: 'GET',
-      data: 'direction',
       url: serverUrl,
-      cache: false,
-      contentType: false,
-      processData: false,
       success: (data) => {
+        console.log(data);
         console.log('GET random response successful');
         let requests = setTimeout(ajaxRandomSwimMove, 2000);
         if(data === 'empty') {

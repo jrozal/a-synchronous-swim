@@ -3,6 +3,7 @@ const path = require('path');
 const headers = require('./cors');
 const multipart = require('./multipartUtils');
 const messagesQ = require('./messageQueue');
+// const defaultBackgroundImage = require('../spec/water-lg.jpg')
 
 // Path for the background image ///////////////////////
 module.exports.backgroundImageFile = path.join('.', 'background.jpg');
@@ -15,20 +16,35 @@ module.exports.initialize = (queue) => {
 
 module.exports.router = (req, res, next = ()=>{}) => {
   console.log('Serving request type ' + req.method + ' for url ' + req.url);
-  let direction = ['up', 'down', 'left', 'right'];
-  res.writeHead(200, headers);
-  if(req.method === 'GET') {
-    let currentDirection = messagesQ.dequeue();
-    console.log(currentDirection);
-    if(!currentDirection) {
-      currentDirection = 'empty';
-    }
-    res.write(currentDirection)
+  if(req.method === 'OPTIONS') {
+    res.writeHead(200, headers)
+    res.end();
+    next();
   }
-
-  //RANDOMIZE
-  // let index = Math.floor(Math.random() * direction.length);
-  // res.end(direction[index]) // send random direction
-  res.end();
-  next(); // invoke next() at the end of a request to help with testing!
+  if(req.method === 'GET') {
+    if (req.url === '/background.jpg') {
+      fs.readFile(module.exports.backgroundImageFile, (err, data) => {
+        if (err) {
+          res.writeHead(404);
+          res.end();
+          next();
+        } else {
+          res.writeHead(200, headers);
+          res.write(data);
+          res.end();
+          next();
+        }
+      });
+    } else {
+      res.writeHead(200, headers);
+      let currentDirection = messagesQ.dequeue();
+      if (!currentDirection) {
+        currentDirection = 'empty';
+      }
+      res.write(currentDirection)
+      res.end();
+      next();
+    }
+  }
+   // invoke next() at the end of a request to help with testing!
 };
