@@ -11,7 +11,6 @@
       type: 'GET',
       url: serverUrl,
       success: (data) => {
-        console.log(data);
         console.log('GET random response successful');
         let requests = setTimeout(ajaxRandomSwimMove, 2000);
         if(data === 'empty') {

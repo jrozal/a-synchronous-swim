@@ -4,6 +4,7 @@ const headers = require('./cors');
 const multipart = require('./multipartUtils');
 const messagesQ = require('./messageQueue');
 // const defaultBackgroundImage = require('../spec/water-lg.jpg')
+var testImg = path.join('.', 'spec', 'water-lg.jpg');
 
 // Path for the background image ///////////////////////
 module.exports.backgroundImageFile = path.join('.', 'background.jpg');
@@ -22,10 +23,11 @@ module.exports.router = (req, res, next = ()=>{}) => {
     next();
   }
   if(req.method === 'GET') {
+    // GET request for background image
     if (req.url === '/background.jpg') {
-      fs.readFile(module.exports.backgroundImageFile, (err, data) => {
+      fs.readFile(testImg, (err, data) => {
         if (err) {
-          res.writeHead(404);
+          res.writeHead(404, headers);
           res.end();
           next();
         } else {
@@ -35,13 +37,20 @@ module.exports.router = (req, res, next = ()=>{}) => {
           next();
         }
       });
-    } else {
+    }
+    // GET request for swimmer from server input
+    else if (req.url === '/') {
       res.writeHead(200, headers);
       let currentDirection = messagesQ.dequeue();
       if (!currentDirection) {
         currentDirection = 'empty';
       }
       res.write(currentDirection)
+      res.end();
+      next();
+    // else handle no image path
+    } else {
+      res.writeHead(404, headers);
       res.end();
       next();
     }
