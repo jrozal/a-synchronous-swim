@@ -18,7 +18,6 @@
         } else {
           SwimTeam.move(data)
         }
-
       },
       error: () => {
         console.log('the GET request has failed');
@@ -42,9 +41,14 @@
       cache: false,
       contentType: false,
       processData: false,
-      success: () => {
+      success: (data) => {
         // reload the page
-        window.location = window.location.href;
+        console.log('upload successful', data);
+        console.log(formData);
+        // window.location = window.location.href;
+      },
+      error: () => {
+        console.log('the POST request has failed');
       }
     });
   };
