@@ -3,7 +3,6 @@ const path = require('path');
 const headers = require('./cors');
 const multipart = require('./multipartUtils');
 const messagesQ = require('./messageQueue');
-// const defaultBackgroundImage = require('../spec/water-lg.jpg')
 var testImg = path.join('.', 'spec', 'water-lg.jpg');
 
 // Path for the background image ///////////////////////
@@ -17,12 +16,12 @@ module.exports.initialize = (queue) => {
 
 module.exports.router = (req, res, next = ()=>{}) => {
   console.log('Serving request type ' + req.method + ' for url ' + req.url);
-  if(req.method === 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     res.writeHead(200, headers)
     res.end();
     next();
   }
-  if(req.method === 'GET') {
+  if (req.method === 'GET') {
     // GET request for background image
     if (req.url === '/background.jpg') {
       fs.readFile(testImg, (err, data) => {
@@ -55,5 +54,31 @@ module.exports.router = (req, res, next = ()=>{}) => {
       next();
     }
   }
-   // invoke next() at the end of a request to help with testing!
+  if (req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk;
+    });
+    console.log(body);
+
+    req.on('end', () => {
+      res.writeHead(200, headers);
+      res.end();
+    })
+
+    // fs.writeFile('/background.jpg', 'new image', (err) => {
+    //   // console.log(formData);
+    //   if (err) {
+    //     console.log('image POST error');
+    //   } else {
+    //     console.log('the image has been saved');
+    //     res.writeHead(200, headers);
+    //     res.write(formData);
+    //     res.end();
+    //     next();
+    //   }
+    // });
+    // console.log(formData);
+  }
+
 };
