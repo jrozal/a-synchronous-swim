@@ -16,7 +16,6 @@ describe('server responses', () => {
     httpHandler.router(req, res);
     expect(res._responseCode).to.equal(200);
     expect(res._ended).to.equal(true);
-    console.log(res._data);
     expect(res._data.toString()).to.be.empty;
 
     done();
@@ -40,7 +39,6 @@ describe('server responses', () => {
     let {req, res} = server.mock('/missing.jpg', 'GET');
 
     httpHandler.router(req, res, () => {
-      console.log(req);
       expect(res._responseCode).to.equal(404);
       expect(res._ended).to.equal(true);
       done();
@@ -53,7 +51,6 @@ describe('server responses', () => {
     let {req, res} = server.mock('/background.jpg', 'GET');
 
     httpHandler.router(req, res, () => {
-      console.log(res);
       expect(res._responseCode).to.equal(200);
       expect(res._ended).to.equal(true);
       done();
@@ -79,10 +76,10 @@ describe('server responses', () => {
     fs.readFile(postTestFile, (err, fileData) => {
       httpHandler.backgroundImageFile = path.join('.', 'spec', 'temp.jpg');
       let post = server.mock('/background.jpg', 'POST', fileData);
-
       httpHandler.router(post.req, post.res, () => {
         let get = server.mock('/background.jpg', 'GET');
         httpHandler.router(get.req, get.res, () => {
+          // pass fileData into multipart
           let file = multipart.getFile(fileData);
           expect(Buffer.compare(file.data, get.res._data)).to.equal(0);
           done();

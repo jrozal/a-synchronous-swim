@@ -43,7 +43,6 @@
       processData: false,
       success: (data) => {
         // reload the page
-        console.log('upload successful', data);
         window.location = window.location.href;
       },
       error: () => {
