@@ -31,7 +31,7 @@ module.exports.router = (req, res, next = ()=>{}) => {
           next();
         } else {
           res.writeHead(200, headers);
-          res.write(data);
+          res.write(data, 'binary');
           res.end();
           next();
         }
@@ -55,27 +55,24 @@ module.exports.router = (req, res, next = ()=>{}) => {
     }
   }
   if (req.method === 'POST') {
-    let parseBuf;
+    let message = Buffer.alloc(0);
     req.on('data', chunk => {
-      parseBuf = multipart.getFile(chunk);
-      // console.log(parseBuf);
-      // body.concat(parseBuf);
+      message = Buffer.concat([message, chunk]);
     });
 
     req.on('end', () => {
-      // let image = multipart.getFile(parseBuf.data);
-
-      console.log('THIS ' + parseBuf.data);
-      fs.writeFile(path.join('.', 'background.jpg'), parseBuf.data, (err) => {
+      let image = multipart.getFile(message);
+      fs.writeFile(path.join('.', 'background.jpg'), image.data, (err) => {
         if (err) {
+          res.writeHead(400, headers);
           console.log('image POST error');
         } else {
+          res.writeHead(201, headers);
           console.log('the image has been saved');
         }
+        res.end();
+        next();
       });
-      res.writeHead(200, headers);
-      res.end();
-      next();
     })
   }
 
