@@ -24,7 +24,7 @@ module.exports.router = (req, res, next = ()=>{}) => {
   if (req.method === 'GET') {
     // GET request for background image
     if (req.url === '/background.jpg') {
-      fs.readFile(testImg, (err, data) => {
+      fs.readFile(path.join('.', 'background.jpg'), (err, data) => {
         if (err) {
           res.writeHead(404, headers);
           res.end();
@@ -55,30 +55,28 @@ module.exports.router = (req, res, next = ()=>{}) => {
     }
   }
   if (req.method === 'POST') {
-    let body = '';
+    let parseBuf;
     req.on('data', chunk => {
-      body += chunk;
+      parseBuf = multipart.getFile(chunk);
+      // console.log(parseBuf);
+      // body.concat(parseBuf);
     });
-    console.log(body);
 
     req.on('end', () => {
+      // let image = multipart.getFile(parseBuf.data);
+
+      console.log('THIS ' + parseBuf.data);
+      fs.writeFile(path.join('.', 'background.jpg'), parseBuf.data, (err) => {
+        if (err) {
+          console.log('image POST error');
+        } else {
+          console.log('the image has been saved');
+        }
+      });
       res.writeHead(200, headers);
       res.end();
+      next();
     })
-
-    // fs.writeFile('/background.jpg', 'new image', (err) => {
-    //   // console.log(formData);
-    //   if (err) {
-    //     console.log('image POST error');
-    //   } else {
-    //     console.log('the image has been saved');
-    //     res.writeHead(200, headers);
-    //     res.write(formData);
-    //     res.end();
-    //     next();
-    //   }
-    // });
-    // console.log(formData);
   }
 
 };

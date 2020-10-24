@@ -11,7 +11,8 @@
       type: 'GET',
       url: serverUrl,
       success: (data) => {
-        console.log('GET random response successful');
+        console.log('GET successful');
+        $('.background').css('background-image', 'url(http://127.0.0.1:3000/background.jpg)');
         let requests = setTimeout(ajaxRandomSwimMove, 2000);
         if(data === 'empty') {
           clearTimeout(requests);
@@ -44,8 +45,7 @@
       success: (data) => {
         // reload the page
         console.log('upload successful', data);
-        console.log(formData);
-        // window.location = window.location.href;
+        window.location = window.location.href;
       },
       error: () => {
         console.log('the POST request has failed');
@@ -69,6 +69,7 @@
     }
 
     ajaxFileUplaod(file);
+
   });
 
 })();
